@@ -34,7 +34,8 @@ if __name__ == "__main__":
     df_FF = df_FF.drop(columns=['Weather_Timestamp'],axis=1)#This relates to what time the weather data was recorded
     df_FF = df_FF.drop(columns=['End_Lat','End_Lng', 'Number'],axis=1) 
     df_FF['Wind_Chill(F)'].fillna(value = df_FF['Wind_Chill(F)'].mean(),inplace = True)
-
+    
+    #For these columns we are keeping nan rows by replacing them with mean value
     df_FF['Wind_Speed(mph)'].fillna(value = df_FF['Wind_Speed(mph)'].mean(),inplace = True)
     df_FF['Visibility(mi)'].fillna(df_FF['Visibility(mi)'].mean(),inplace = True)
     df_FF['Precipitation(in)'].fillna(df_FF['Precipitation(in)'].mean(),inplace = True) 
@@ -59,6 +60,7 @@ if __name__ == "__main__":
     df_FF = df_FF[~df_FF['Weather_Condition'].isnull()]
     df_FF = df_FF[~df_FF['Wind_Direction'].isnull()]
     
+    #Cleaning Wind Direction column
     df_FF['Wind_Direction'].replace('Calm','CALM',inplace=True)
     df_FF['Wind_Direction'].replace('North','N',inplace=True)
     df_FF['Wind_Direction'].replace('South','S',inplace=True)
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     df_FF['Wind_Direction'].replace('West','W',inplace=True)
     df_FF['Wind_Direction'].replace('Variable','VAR',inplace=True)
     
-    
+    #Binning of time of the day and seasons
     timeBins=[-1,6,12,18,24]
     tBin_names=['Early Morning','Morning','Afternoon','Evening']
     df_FF['TimeofDay']=pd.cut(df_FF['Time_S'],timeBins,labels=tBin_names)
@@ -90,6 +92,7 @@ if __name__ == "__main__":
     
     df_FF = df_FF[~(df_FF['Duration'] <= 0 )]
     
+    #We further clean wind direction by grouping similar values into one
     df = df_FF
     df.loc[df['Wind_Direction']=='Calm','Wind_Direction'] = 'CALM'
     df.loc[(df['Wind_Direction']=='West')|(df['Wind_Direction']=='WSW')|(df['Wind_Direction']=='WNW'),'Wind_Direction'] = 'W'
@@ -102,6 +105,7 @@ if __name__ == "__main__":
     weather ='!'.join(df['Weather_Condition'].dropna().unique().tolist())
     df_FF = df
     
+    #We clean weather condition by dividing all the values into the below 7 categories
     df['Clear'] = np.where(df['Weather_Condition'].str.contains('Clear', case=False, na = False), 1, 0)
     df['Cloud'] = np.where(df['Weather_Condition'].str.contains('Cloud|Overcast', case=False, na = False), 1, 0)
     df['Rain'] = np.where(df['Weather_Condition'].str.contains('Rain|storm', case=False, na = False), 1, 0)
