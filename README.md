@@ -23,3 +23,4 @@
     - Neural Networks
 
 - The files in the folder `Model Training Code` are used for creating the model dumps of the above 2+7 models and the weights are saved. 
+- Data and Trained models can be found here : https://drive.google.com/drive/folders/1D8hd2GPEJYF-BKjkfV1-7CILVjdi-zDt?usp=sharing
